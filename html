@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll Program</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Main Page -->
+<div class="container" id="main-page">
+    <h1>Payroll Input</h1>
+    <label for="idNumber">ID Number:</label>
+    <input type="text" id="idNumber" placeholder="Enter ID Number" required>
+    
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" placeholder="Enter Last Name" required>
+    
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" placeholder="Enter First Name" required>
+    
+    <label for="middleName">Middle Name:</label>
+    <input type="text" id="middleName" placeholder="Enter Middle Name" required>
+    
+    <label for="position">Position:</label>
+    <input type="text" id="position" placeholder="Enter Position" required>
+    
+    <label for="rate">Hourly Rate:</label>
+    <input type="number" id="rate" placeholder="Enter hourly rate" required>
+    
+    <label for="days">Days Worked:</label>
+    <input type="number" id="days" placeholder="Enter days worked" required>
+    
+    <button onclick="calculatePayroll()">Calculate Payroll</button>
+</div>
+
+<!-- Display Page -->
+<div class="container" id="display-page" style="display: none;">
+    <h1>Payroll Summary</h1>
+    <div class="result" id="result"></div>
+    <button onclick="goBack()">Go Back</button>
+</div>
+
+<script>
+    function calculatePayroll() {
+        const idNumber = document.getElementById('idNumber').value;
+        const lastName = document.getElementById('lastName').value;
+        const firstName = document.getElementById('firstName').value;
+        const middleName = document.getElementById('middleName').value;
+        const position = document.getElementById('position').value;
+        const rate = parseFloat(document.getElementById('rate').value);
+        const days = parseFloat(document.getElementById('days').value);
+        
+        if (isNaN(rate) || isNaN(days) || rate <= 0 || days <= 0) {
+            alert('Please enter valid numbers for rate and days.');
+            return;
+        }
+        
+        const grossPay = rate * days;
+        const sssDeduction = grossPay * 0.05;
+        const pagIbigDeduction = grossPay * 0.03;
+        const philHealthDeduction = grossPay * 0.02;
+        const taxDeduction = grossPay * 0.05;
+        const totalDeduction = sssDeduction + pagIbigDeduction + philHealthDeduction + taxDeduction;
+        const netPay = grossPay - totalDeduction;
+
+        const resultHtml = `
+            <p><strong>ID Number:</strong> ${idNumber}</p>
+            <p><strong>Name:</strong> ${firstName} ${middleName} ${lastName}</p>
+            <p><strong>Position:</strong> ${position}</p>
+            <p><strong>Gross Pay:</strong> ₱${grossPay.toFixed(2)}</p>
+            <p><strong>SSS Deduction (5%):</strong> ₱${sssDeduction.toFixed(2)}</p>
+            <p><strong>Pag-ibig Deduction (3%):</strong> ₱${pagIbigDeduction.toFixed(2)}</p>
+            <p><strong>Philhealth Deduction (2%):</strong> ₱${philHealthDeduction.toFixed(2)}</p>
+            <p><strong>Tax Deduction (5%):</strong> ₱${taxDeduction.toFixed(2)}</p>
+            <p><strong>Total Deduction:</strong> ₱${totalDeduction.toFixed(2)}</p>
+            <p><strong>Net Pay:</strong> ₱${netPay.toFixed(2)}</p>
+        `;
+
+        document.getElementById('result').innerHTML = resultHtml;
+        document.getElementById('main-page').style.display = 'none';
+        document.getElementById('display-page').style.display = 'block';
+    }
+
+    function goBack() {
+        document.getElementById('main-page').style.display = 'block';
+        document.getElementById('display-page').style.display = 'none';
+    }
+</script>
+</body>
+</html>
